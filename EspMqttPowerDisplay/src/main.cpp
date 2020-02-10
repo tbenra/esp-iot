@@ -77,7 +77,10 @@ void setup() {
   }
   
   display.clearDisplay();
-  display.drawChar(5, 10, 'X', WHITE, BLACK, 2);
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.println("Hello, world!");
   display.display();
   
   WiFi.begin(ssid, password);
