@@ -8,14 +8,15 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <PubSubClient.h>
+#include <Wire.h>
 
 //Display
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
-#define OLED_DC     D5
+#define OLED_DC     D1
 #define OLED_CS     D2
 #define OLED_RESET  -1
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, OLED_DC, OLED_RESET, OLED_CS);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 //Wifi and MQTT
 
@@ -69,6 +70,15 @@ void reconnect() {
 
 void setup() {
   Serial.begin(115200);
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+  }
+  
+  
+  display.drawPixel(10, 10, SSD1306_WHITE);
+  display.display();
+  
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi..");
   while (WiFi.status() != WL_CONNECTED) {
