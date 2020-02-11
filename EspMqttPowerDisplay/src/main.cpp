@@ -8,6 +8,7 @@
 #include <WiFiClient.h>
 #include <PubSubClient.h>
 #include <Wire.h>
+#include <Fonts/FreeMono12pt7b.h>
 
 //Display
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -50,17 +51,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Voltage: ");
   Serial.println(voltage);
 
+  display.setFont(&FreeMono12pt7b);
   display.clearDisplay();
-  display.setCursor(0,0);
-  display.setTextSize(2);
+  display.setCursor(0,22);
+  display.setTextSize(1);
   display.print(power);
   display.println(" W");
-  display.setCursor(0,32);
   display.print(voltage);
-  display.println(" V");
+  display.print(" V");
   display.display();
 
-
+  display.setFont();
   display.setTextSize(1);
   display.setCursor(0,0);
 
