@@ -56,6 +56,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
+    WiFi.begin(ssid, password);
+    display.print("Reconnecting");
+    display.display();
+    while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    display.print(".");
+    display.display();
+  }
+    display.println("done");
+    display.display();
     while (!client.connected()) {
         Serial.println("Reconnecting MQTT...");
         if (!client.connect("ESP8266Client")) {
@@ -67,6 +78,8 @@ void reconnect() {
     }
     client.subscribe(PowTeleTopic);
     Serial.println("MQTT reonnected...");
+    display.println("MQTT reonnected...");
+    display.display();
 }
 
 void setup() {
@@ -76,7 +89,7 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
   }
-  
+  display.setRotation(2);
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0,0);
@@ -100,16 +113,20 @@ void setup() {
   display.setTextSize(1.5);
   display.setCursor(0,0);
   display.print("Connected to the WiFi network:");
-  display.print(ssid);
+  display.println(ssid);
   display.display();
-  Serial.println("Connected to the WiFi network");
+  Serial.print("Connected to the WiFi network");
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
  
   while (!client.connected()) {
     Serial.println("Connecting to MQTT...");
+    display.println("Connecting to MQTT...");
+    display.display();
     if (client.connect("ESP8266Client")) {
-      Serial.println("MQTT connected");  
+      Serial.println("MQTT connected");
+      display.println("MQTT connected");
+      display.display();
           } 
     else {
       Serial.print("failed with state ");
@@ -119,13 +136,20 @@ void setup() {
   }
  
   client.publish("esp/test", "Hello from ESP8266");
-  client.subscribe("tele/sonoff/SENSOR");
+  client.subscribe(PowTeleTopic);
+  display.print("Subscribed to:");
+  display.println(PowTeleTopic);
+  display.display();
   
 }
 
 
 void loop() {
   if (!client.connected()) {
+        display.clearDisplay();
+        display.setCursor(0,0);
+        display.println("Wifi/Mqtt disconnected");
+        display.display();
         reconnect();
     }
 
