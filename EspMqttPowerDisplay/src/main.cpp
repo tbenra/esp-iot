@@ -60,7 +60,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   display.print(voltage);
   display.print(" V");
   display.display();
-
   display.setFont();
   display.setTextSize(1);
   display.setCursor(0,0);
