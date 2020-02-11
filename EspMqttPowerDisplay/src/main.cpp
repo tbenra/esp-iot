@@ -70,6 +70,7 @@ void reconnect() {
 }
 
 void setup() {
+  display.setTextColor(WHITE);
   Serial.begin(115200);
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
     Serial.println(F("SSD1306 allocation failed"));
@@ -78,17 +79,29 @@ void setup() {
   
   display.clearDisplay();
   display.setTextSize(1);
-  display.setTextColor(WHITE);
   display.setCursor(0,0);
-  display.println("Hello, world!");
+  display.print("Hello, world!");
   display.display();
   
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi..");
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0,0);
+  display.print("Connecting to WiFi..");
+  display.display();
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    display.print(".");
+    display.display();
   }
+  display.clearDisplay();
+  display.setTextSize(1.5);
+  display.setCursor(0,0);
+  display.print("Connected to the WiFi network:");
+  display.print(ssid);
+  display.display();
   Serial.println("Connected to the WiFi network");
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
