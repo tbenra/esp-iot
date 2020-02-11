@@ -46,11 +46,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
   double power = doc["ENERGY"]["Power"];
   Serial.print("Power: ");
   Serial.println(power);
-
   double voltage = doc["ENERGY"]["Voltage"];
   Serial.print("Voltage: ");
   Serial.println(voltage);
 
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.setTextSize(2);
+  display.print(power);
+  display.println(" W");
+  display.setCursor(0,32);
+  display.print(voltage);
+  display.println(" V");
+  display.display();
+
+
+  display.setTextSize(1);
+  display.setCursor(0,0);
 
 
 }
